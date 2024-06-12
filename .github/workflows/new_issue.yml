@@ -1,0 +1,19 @@
+name: Issue Commenter
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Comment on issue
+      uses: actions/github-script@v5
+      with:
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Thank you for creating an issue! We will look into it ASAP.'
+          })
