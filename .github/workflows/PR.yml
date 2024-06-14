@@ -17,4 +17,4 @@ jobs:
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
           LABELS: needs review
-          ASSIGNEE: @me
+          ASSIGNEE: ${{ github.actor }}
