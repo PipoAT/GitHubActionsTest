@@ -9,8 +9,8 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - name: Label and Assign
-        id: action
+      - name: Label and Assign PRs
+        id: label_assign
         run: |
           gh pr edit "$NUMBER" --add-label "$LABELS"
           gh pr edit "$NUMBER" --add-assignee "$ASSIGNEE"
@@ -26,7 +26,6 @@ jobs:
           NUMBER: ${{ github.event.pull_request.number }}
           LABELS: needs-review
           ASSIGNEE: ${{ github.actor }}
-        continue-on-error: true
-      - name: Echo Failures
-        if: steps.action.outcome == 'failure'
-        run: echo "The Label and Assign step failed with error ${{ steps.action.outputs.error }}"
+      - name: Check for errors
+        if: ${{ failure() }}
+        run: echo "::error::Step 'Label and Assign PRs' failed"
