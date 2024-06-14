@@ -11,10 +11,10 @@ jobs:
     steps:
       - run: |
           gh pr edit "$NUMBER" --add-label "$LABELS"
-          gh pr edit "$NUMBER" --assign "$ASSIGNEE"
+          gh pr edit "$NUMBER" --add-assignee "$ASSIGNEE"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
           LABELS: needs review
-          ASSIGNEE: PipoAT
+          ASSIGNEE: @me
