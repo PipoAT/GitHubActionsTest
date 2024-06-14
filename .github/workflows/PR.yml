@@ -9,12 +9,24 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - run: |
+      - name: Label and Assign
+        id: action
+        run: |
           gh pr edit "$NUMBER" --add-label "$LABELS"
           gh pr edit "$NUMBER" --add-assignee "$ASSIGNEE"
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers \
+            -d '{"team_reviewers": ["Web Development Team"]}'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
-          LABELS: needs review
+          LABELS: needs-review
           ASSIGNEE: ${{ github.actor }}
+        continue-on-error: true
+      - name: Echo Failures
+        if: steps.action.outcome == 'failure'
+        run: echo "The Label and Assign step failed with error ${{ steps.action.outputs.error }}"
