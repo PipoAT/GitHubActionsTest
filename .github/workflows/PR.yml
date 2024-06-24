@@ -11,7 +11,7 @@ jobs:
     steps:
       - run: |
           gh pr edit "$NUMBER" --add-label "$LABELS" --add-assignee "$ASSIGNEE"
-          -w %{http_code} \
+          curl -w %{http_code} \
             -X POST \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
